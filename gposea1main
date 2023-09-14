@@ -50,6 +50,34 @@ function nowindshake()
     end
 end
 
+local function unlockgeppo()
+    while getgenv().unlockgeppo == true do
+        game:GetService("ReplicatedStorage").StatsxN3ROXxx.Skills.skyWalk.Enabled = true
+        wait(1)
+    end
+end
+
+local function walkonwater()
+    while getgenv().walkonwater == true do
+        game:GetService("ReplicatedStorage").StatsxN3ROXxx.Stats.DF.YamiYami = true
+        wait(1)
+    end
+end
+
+local function autoreload()
+    while getgenv().autoreload == true do
+        local args = {
+            [1] = "reload",
+            [2] = {
+                ["Gun"] = "Rifle"
+            }
+        }
+        
+        game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("CIcklcon"):WaitForChild("gunFunctions"):InvokeServer(unpack(args))
+        wait(1)
+    end
+end
+
 
 -- Define o nome do NPC que você deseja cultivar
 local npcname = "Bandit" -- Altere para o nome real do NPC que deseja cultivar
@@ -59,7 +87,7 @@ local isAutoFarming = false
 
 -- Função para realizar a agricultura automática
 local function AutoFarmBandit()
-    while isAutoFarming == true do
+    while isAutoFarming do
         local player = game.Players.LocalPlayer
         local TweenService = game:GetService("TweenService")
         local Players = game:GetService("Players")
@@ -112,19 +140,23 @@ local function AutoFarmBandit()
             return npc and npc.Parent ~= nil and npc:FindFirstChild("Humanoid") and npc:FindFirstChild("Humanoid").Health > 0
         end
         
-        function tweenModel(model, targetCF, speed)
+        function tweenModel(model, targetCF, speed, height)
             local targetCF = GetCFrame(targetCF)
+            local targetPosition = targetCF.Position + Vector3.new(0, -4, 0) -- Adicione a altura desejada
             local currentCF = model:GetPrimaryPartCFrame()
+            local currentHeight = currentCF.Position.Y
             local distanceToTarget = Magnitude("player", targetCF)
             local duration = distanceToTarget / speed
-
+        
             local CFrameValue = Instance.new("CFrameValue")
             CFrameValue.Value = currentCF
             CFrameValue:GetPropertyChangedSignal("Value"):Connect(function()
-                model:SetPrimaryPartCFrame(CFrameValue.Value)
+                local currentValue = CFrameValue.Value
+                local newPosition = currentValue.Position + Vector3.new(0, -4, 0) -- Adicione a altura desejada
+                model:SetPrimaryPartCFrame(CFrame.new(newPosition, currentValue.Position))
             end)
             local tween = TweenService:Create(CFrameValue, TweenInfo.new(duration), {
-                Value = targetCF,
+                Value = CFrame.new(targetPosition, currentCF.Position),
             })
             tween:Play()
             tween.Completed:Connect(function()
@@ -137,11 +169,15 @@ local function AutoFarmBandit()
             local obj = game.workspace.NPCs:FindFirstChild(npcname)
             if obj and IsNPCAlive(obj) then
                 -- Chame a função tweenModel modificada com apenas velocidade
-                tweenModel(player.Character, obj, 60)
+                tweenModel(player.Character, obj, 40)
+            end
+            if not isAutoFarming then
+                break -- Sai do loop principal se a agricultura automática for desativada
             end
         end
     end
 end
+
 
 local function autofarmhakielogia()
     while isAutoLogia == true do
@@ -217,12 +253,13 @@ local function autofarmhakielogia()
             end)
         end
 
-        while true do
-            task.wait()
-            local obj = game.workspace.NPCs:FindFirstChild(npcname)
+        while isAutoFarming do
+            task.wait() -- Certifique-se de que a biblioteca 'task' está disponível e configurada corretamente
+
+            local obj = game.workspace.NPCs:FindFirstChild(npcName)
             if obj and IsNPCAlive(obj) then
                 -- Chame a função tweenModel modificada com apenas velocidade
-                tweenModel(player.Character, obj, 60)
+                tweenModel(player.Character, obj.CFrame.Position, 60) -- Use obj.CFrame.Position para obter a posição do NPC
             end
         end
     end
@@ -370,8 +407,8 @@ function autostatsSTA()
     end
 end 
 
-function autouseskill()
-    while getgenv().autouseskill == true do
+function autouseskillE()
+    while getgenv().autouseskillE == true do
         local player = game.Players.LocalPlayer -- Substitua pelo jogador desejado
         local character = player.Character
 
@@ -382,6 +419,31 @@ function autouseskill()
                 local playerCFrame = humanoidRootPart.CFrame
                 local args = {
                     [1] = "Black Hole",
+                    [2] = playerCFrame
+                }
+
+                local replicatedStorage = game:GetService("ReplicatedStorage")
+                local events = replicatedStorage:WaitForChild("Events")
+                local skillEvent = events:WaitForChild("Skill")
+                skillEvent:InvokeServer(unpack(args))
+            end
+        end
+        wait(1) -- Add a wait here to avoid high CPU usage
+    end
+end
+
+function autouseskillR()
+    while getgenv().autouseskillR == true do
+        local player = game.Players.LocalPlayer -- Substitua pelo jogador desejado
+        local character = player.Character
+
+        if character then
+            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+
+            if humanoidRootPart then
+                local playerCFrame = humanoidRootPart.CFrame
+                local args = {
+                    [1] = "Cruel Burst",
                     [2] = playerCFrame
                 }
 
@@ -453,41 +515,6 @@ LeftGroupBox:AddSlider('Walkspeed', {
     end
 })
 
-local RightGroupBox = Tabs.Main:AddRightGroupbox('Esp')
-
-RightGroupBox:AddToggle('Esp Player', {
-    Text = 'Esp Player',
-    Default = false,
-    Tooltip = 'Esp Player',
-    Callback = function(Value)
-        for _, v in pairs(game.Workspace.NPCs:GetChildren()) do
-            if v:IsA("Model") then
-                local a = v:FindFirstChild("A")
-
-                if not a and Value then
-                    a = Instance.new("BillboardGui", v)
-                    a.Name = "A"
-                    a.AlwaysOnTop = true
-                
-                    local b = Instance.new("Frame", a)
-                    b.Size = UDim2.new(1, 0, 1, 0)
-                    b.BackgroundTransparency = 1
-                    b.BorderSizePixel = 0
-                
-                    local c = Instance.new("TextLabel", b)
-                    c.Text = v.Name
-                    c.TextColor3 = Color3.new(1, 1, 1)
-                    c.Size = UDim2.new(1, 0, 1, 0)
-                    c.BackgroundTransparency = 1
-                    c.BorderSizePixel = 0
-                elseif a and not Value then
-                    a:Destroy()
-                end
-            end
-        end
-    end
-})
-
 local Tabs = {
     Main = Window:AddTab('Farm'),
 }
@@ -513,8 +540,18 @@ LeftGroupBox:AddToggle('Auto Use Skill', {
     Default = false,
     Tooltip = 'Auto Use Skill',
     Callback = function(Value)
-        getgenv().autouseskill = Value
-        autouseskill()
+        getgenv().autouseskillE = Value
+        autouseskillE()
+    end
+})
+
+LeftGroupBox:AddToggle('Auto Use Skill', {
+    Text = 'Auto Use Skill (Only R of Yami Yami No Mi)',
+    Default = false,
+    Tooltip = 'Auto Use Skill',
+    Callback = function(Value)
+        getgenv().autouseskillR = Value
+        autouseskillR()
     end
 })
 
@@ -616,10 +653,6 @@ MenuGroup:AddButton('Unload', function() Library:Unload() end)
 MenuGroup:AddLabel('Menu bind'):AddKeyPicker('MenuKeybind', { Default = 'End', NoUI = true, Text = 'Menu keybind' })
 
 -- Define a tabela 'Options'
-local Options = {
-    MenuKeybind = 'End'
-}
-
 Library.ToggleKeybind = Options.MenuKeybind
 
 ThemeManager:SetLibrary(Library)
