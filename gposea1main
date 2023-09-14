@@ -1,10 +1,10 @@
 warn('[TEMPEST HUB] Loading Bypass')
 wait(1)
-warn('[TEMPEST HUB]Checking Functions')
+warn('[TEMPEST HUB] Checking Functions')
 wait(1)
-warn('[TEMPEST HUB]Loading Functions')
+warn('[TEMPEST HUB] Loading Functions')
 wait(1)
-warn('[TEMPEST HUB]Loading Ui')
+warn('[TEMPEST HUB] Loading Ui')
 wait(1)
 local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/'
 
