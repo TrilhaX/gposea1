@@ -730,10 +730,10 @@ LeftGroupBox:AddToggle('Aimbot (Only Gun)', {
 
 local LeftGroupBox = Tabs.Main:AddLeftGroupbox('Auto Use Skill (Only Fruits)')
 
-LeftGroupBox:AddToggle('Auto Use Skill Dark', {
-    Text = 'Auto Use Skill Dark Skill',
+LeftGroupBox:AddToggle('Auto Use Skill Dark Fruit', {
+    Text = 'Auto Use Skill Dark Fruit',
     Default = false,
-    Tooltip = 'Auto Use Skill Dark',
+    Tooltip = 'Auto Use Skill Dark Fruit',
     Callback = function(Value)
         getgenv().autodarkskill = Value
         autodarkskill()
